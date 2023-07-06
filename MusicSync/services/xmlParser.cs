@@ -20,6 +20,7 @@ namespace MusicSync
         public static List<XmlNode> LoadPlaylists(string filePath)
         {
             XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
+            string excludedNodeName = "Library";
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(9)
                 .ToList();
@@ -78,32 +79,34 @@ namespace MusicSync
                 }
                 else
                 {
-                    XmlNodeList trackIDsNode = PlaylistNode.SelectNodes("key[text()='Playlist Items']/following-sibling::array/dict/key[text()='Track ID']/following-sibling::integer");
+                XmlNodeList trackIDsNode = PlaylistNode.SelectNodes("key[text()='Playlist Items']/following-sibling::array/dict/key[text()='Track ID']/following-sibling::integer");
 
-                    if (nameNode != null && trackIDsNode != null)
+                if (nameNode != null && trackIDsNode != null)
+                {
+                    string PlaylistName = nameNode.NextSibling.InnerText;
+
+                    List<msTrack> tracks = new List<msTrack>();
+                    foreach (XmlNode trackIDNode in trackIDsNode)
                     {
-                        List<msTrack> tracks = new List<msTrack>();
-                        foreach (XmlNode trackIDNode in trackIDsNode)
+                        int trackID = int.Parse(trackIDNode.InnerText);
+                        msTrack track = GetTrackInfo(LoadXml(filePath), trackID);
+                        if (track != null)
                         {
-                            int trackID = int.Parse(trackIDNode.InnerText);
-                            msTrack track = GetTrackInfo(LoadXml(filePath), trackID);
-                            if (track != null)
-                            {
-                                tracks.Add(track);
-                            }
+                            tracks.Add(track);
                         }
+                    }
 
-                        msPlaylist Playlist = new msPlaylist
-                        {
+                    msPlaylist Playlist = new msPlaylist
+                    {
                             Id = Id,
                             OwnerRef = Owner,
                             Name = Name,
-                            TrackIDs = tracks
-                        };
+                        TrackIDs = tracks
+                    };
 
-                        Playlists.Add(Playlist);
-                    }
+                    Playlists.Add(Playlist);
                 }
+            }
             }
 
             return Playlists;
