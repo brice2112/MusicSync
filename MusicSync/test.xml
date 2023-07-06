@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--<plist version="1.0">-->
+<!--<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Application Version</key><string>12.12.8.2</string>
+	<key>Date</key><date>2023-04-30T15:02:08Z</date>
+	<key>Features</key><integer>5</integer>
+	<key>Show Content Ratings</key><true/>
+	</dict>
+</plist>-->
+
+<!-- # Playlist test: -->
+<!-- ================================================================================ -->
+
+<dict>
+	<key>Playlist ID</key><integer>113877</integer>
+	<key>Playlist Persistent ID</key><string>A0363F33016472C6</string>
+	<key>All Items</key><true/>
+	<key>Name</key><string>Sakamix</string>
+	<key>Playlist Items</key>
+	<array>
+		<dict>
+			<key>Track ID</key><integer>19324</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19926</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19932</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>20714</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>21042</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19948</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>20000</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19316</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>21232</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>21226</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>14132</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>5702</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>5708</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>16392</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>6452</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>16372</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>11718</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>17364</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>21582</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>15810</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7576</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7304</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>23120</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>12192</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7582</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7772</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>20570</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>16024</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>22566</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>21604</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>15982</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>12366</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19452</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>16028</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>16106</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>11490</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>11922</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>17774</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>13990</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>24416</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>17958</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7884</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>28240</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7052</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>18940</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>7370</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>15694</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19870</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>19392</integer>
+		</dict>
+		<dict>
+			<key>Track ID</key><integer>14038</integer>
+		</dict>
+	</array>
+</dict>
