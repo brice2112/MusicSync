@@ -1,6 +1,7 @@
 ﻿using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Schema;
 
 namespace MusicSync
 {
@@ -12,16 +13,16 @@ namespace MusicSync
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            // ApplicationConfiguration.Initialize();
-            // Application.Run(new Form1());
+            string XmlPath = @"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml";
+
+            //Test: Search for a track directly in XML
+            xmlFinder.FindTrackByID(XmlPath, 4332);
 
             // Init: Get playlist names
-            xmlParser.ExtractPlaylistNames(@"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml");
+            xmlParser.ExtractPlaylistNames(XmlPath);
 
             // Method 1 : Read XML using XMLDocument
-            xmlParser.ExtractFoldersAndPlaylists(@"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml");
+            xmlParser.ExtractFoldersAndPlaylists(XmlPath);
 
             //Method 2 : Deserialize XML
             //DeserializeXMl();
@@ -29,33 +30,33 @@ namespace MusicSync
             Console.ReadLine();
         }
 
-        static void ReadXml(string filePath)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filePath);
-            XmlElement Root = doc.DocumentElement;
-            if (Root != null)
-            {
-                foreach (XmlNode node in Root.ChildNodes)
-                {
-                    String Header = node.InnerText;
-                    String Value = "";
-                    if (node.NextSibling != null)
-                    {
-                        Value = node.NextSibling.InnerText;
-                    }
+        //static void ReadXml(string filePath)
+        //{
+        //    XmlDocument doc = new XmlDocument();
+        //    doc.Load(filePath);
+        //    XmlElement Root = doc.DocumentElement;
+        //    if (Root != null)
+        //    {
+        //        foreach (XmlNode node in Root.ChildNodes)
+        //        {
+        //            String Header = node.InnerText;
+        //            String Value = "";
+        //            if (node.NextSibling != null)
+        //            {
+        //                Value = node.NextSibling.InnerText;
+        //            }
 
-                    Console.WriteLine($"{Header} - {Value}");
-                }
-            }
-        }
+        //            Console.WriteLine($"{Header} - {Value}");
+        //        }
+        //    }
+        //}
 
-        static void DeserializeXMl()
-        {
-            XmlReader xmlDoc = XmlReader.Create(@"C:\Users\Admin\source\repos\MusicSync\MusicSync\test.xml");
-            XmlSerializer xmlSer = new XmlSerializer(typeof(String));
-            String deser = (string)xmlSer.Deserialize(xmlDoc);
-            Console.WriteLine(deser );
-        }
+        //static void DeserializeXMl()
+        //{
+        //    XmlReader xmlDoc = XmlReader.Create(@"C:\Users\Admin\source\repos\MusicSync\MusicSync\test.xml");
+        //    XmlSerializer xmlSer = new XmlSerializer(typeof(String));
+        //    String deser = (string)xmlSer.Deserialize(xmlDoc);
+        //    Console.WriteLine(deser );
+        //}
     }
 }

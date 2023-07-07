@@ -20,7 +20,6 @@ namespace MusicSync
         public static List<XmlNode> LoadPlaylists(string filePath)
         {
             XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
-            string excludedNodeName = "Library";
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(9)
                 .ToList();
@@ -76,45 +75,46 @@ namespace MusicSync
                         Name = Name,
                     };
                     Folders.Add(Folder);
+                    Console.WriteLine($"Folder : {Folder.Name} added");
                 }
                 else
                 {
-                XmlNodeList trackIDsNode = PlaylistNode.SelectNodes("key[text()='Playlist Items']/following-sibling::array/dict/key[text()='Track ID']/following-sibling::integer");
 
-                if (nameNode != null && trackIDsNode != null)
-                {
-                    string PlaylistName = nameNode.NextSibling.InnerText;
+                    XmlNodeList trackIDsNode = PlaylistNode.SelectNodes("key[text()='Playlist Items']/following-sibling::array/dict/key[text()='Track ID']/following-sibling::integer");
 
-                    List<msTrack> tracks = new List<msTrack>();
-                    foreach (XmlNode trackIDNode in trackIDsNode)
+                    if (nameNode != null && trackIDsNode != null)
                     {
-                        int trackID = int.Parse(trackIDNode.InnerText);
-                        msTrack track = GetTrackInfo(LoadXml(filePath), trackID);
-                        if (track != null)
+                        List<msTrack> tracks = new List<msTrack>();
+                        foreach (XmlNode trackIDNode in trackIDsNode)
                         {
-                            tracks.Add(track);
+                            int trackID = int.Parse(trackIDNode.InnerText);
+                            msTrack track = GetTrackInfo(filePath, trackID);
+                            if (track != null)
+                            {
+                                tracks.Add(track);
+                            }
                         }
-                    }
 
-                    msPlaylist Playlist = new msPlaylist
-                    {
+                        msPlaylist Playlist = new msPlaylist
+                        {
                             Id = Id,
                             OwnerRef = Owner,
                             Name = Name,
-                        TrackIDs = tracks
-                    };
+                            TrackIDs = tracks
+                        };
 
-                    Playlists.Add(Playlist);
+                        Playlists.Add(Playlist);
+                        Console.WriteLine($"Playlist: {Playlist.Name} added");
+                    }
                 }
-            }
             }
 
             return Playlists;
         }
 
-        private static msTrack GetTrackInfo(XmlDocument xmlDoc, int trackID)
+        private static msTrack GetTrackInfo(string filePath, int trackID)
         {
-            XmlNode trackNode = xmlDoc.SelectSingleNode($"//dict[key[text()='Track ID'] and following-sibling::integer[text()='{trackID}']]/following-sibling::dict");
+            XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackID);
             if (trackNode != null)
             {
                 XmlNode titleNode = trackNode.SelectSingleNode("key[text()='Name']");
