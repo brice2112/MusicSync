@@ -15,16 +15,17 @@ namespace MusicSync
         {
             string XmlPath = @"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml";
 
-            //Test: Search for a track directly in XML
-            xmlFinder.FindTrackByID(XmlPath, 4332);
-
             // Init: Get playlist names
             xmlParser.ExtractPlaylistNames(XmlPath);
 
-            // Method 1 : Read XML using XMLDocument
-            xmlParser.ExtractFoldersAndPlaylists(XmlPath);
+            // Read XML using XMLDocument
+            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlParser.ExtractFoldersAndPlaylists(XmlPath);
 
-            //Method 2 : Deserialize XML
+            // Organize folders
+            List<msFolder> Folders = FoldersAndPlaylist.Item1;
+            List<msPlaylist> Playlists = FoldersAndPlaylist.Item2;
+            playlistController.OrganizeFoldersAndPlaylists(Folders, Playlists);
+
             //DeserializeXMl();
 
             Console.ReadLine();

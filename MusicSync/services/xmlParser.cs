@@ -21,7 +21,7 @@ namespace MusicSync
         {
             XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
-                .Skip(9)
+                .Skip(29)
                 .ToList();
             return PlaylistNodes;
         }
@@ -40,8 +40,9 @@ namespace MusicSync
             return PlaylistNames;
          }
 
-        public static List<msPlaylist> ExtractFoldersAndPlaylists(string filePath)
+        public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(string filePath)
         {
+            (msFolder, msPlaylist) Output;
             List<msFolder> Folders = new List<msFolder>();
             List<msPlaylist> Playlists = new List<msPlaylist>();
 
@@ -55,11 +56,11 @@ namespace MusicSync
                 XmlNode IdNode = PlaylistNode.SelectSingleNode("key[text()='Playlist Persistent ID']");
                 string Id = IdNode.NextSibling.InnerText;
 
-                string Owner = "";
+                string Owner = "0";
                 XmlNode OwnerNode = PlaylistNode.SelectSingleNode("key[text()='Parent Persistent ID']");
                 if (OwnerNode != null)
                 {
-                    Owner = IdNode.NextSibling.InnerText;
+                    Owner = OwnerNode.NextSibling.InnerText;
                 }
 
                 Boolean isFolder = false;
@@ -109,7 +110,8 @@ namespace MusicSync
                 }
             }
 
-            return Playlists;
+
+            return (Folders, Playlists);
         }
 
         private static msTrack GetTrackInfo(string filePath, int trackID)

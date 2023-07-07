@@ -14,5 +14,11 @@ namespace MusicSync
         public List<msFolder> Folders { get; set; }
         public List<msPlaylist> Playlists { get; set; }
 
+        public msFolder()
+        {
+            Folders = new List<msFolder>();
+            Playlists = new List<msPlaylist>();
+        }
+
     }
 }
