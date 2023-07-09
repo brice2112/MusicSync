@@ -22,6 +22,7 @@ namespace MusicSync
             XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(29)
+                .Take(5)
                 .ToList();
             return PlaylistNodes;
         }
@@ -121,17 +122,20 @@ namespace MusicSync
             {
                 XmlNode titleNode = trackNode.SelectSingleNode("key[text()='Name']");
                 XmlNode artistNode = trackNode.SelectSingleNode("key[text()='Artist']");
+                XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
 
                 if (titleNode != null && artistNode != null)
                 {
                     string title = titleNode.NextSibling.InnerText;
                     string artist = artistNode.NextSibling.InnerText;
+                    string location = locationNode.NextSibling.InnerText;
 
                     msTrack track = new msTrack
                     {
                         TrackID = trackID,
                         Title = title,
-                        Artist = artist
+                        Artist = artist,
+                        Location = location
                     };
 
                     return track;

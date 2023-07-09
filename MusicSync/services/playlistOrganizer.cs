@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace MusicSync
 {
-    public static class playlistController
+    public static class playlistOrganizer
     {
         public static List<msFolder> OrganizeFoldersAndPlaylists(List<msFolder> folders, List<msPlaylist> playlists)
         {
@@ -38,7 +38,7 @@ namespace MusicSync
                 }
                 else
                 {
-                    if (folderDictionary.TryGetValue(playlist.Id, out msFolder parentFolder))
+                    if (folderDictionary.TryGetValue(playlist.OwnerRef, out msFolder parentFolder))
                     {
                         msFolder targetFolder = FindFolderByID(parentFolder, playlist.OwnerRef);
                         targetFolder?.Playlists.Add(playlist);

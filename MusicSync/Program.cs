@@ -14,20 +14,25 @@ namespace MusicSync
         static void Main()
         {
             string XmlPath = @"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml";
+            string exportDirectory = @"C:\Users\Admin\Music\Cayin\Playlists";
 
             // Init: Get playlist names
             xmlParser.ExtractPlaylistNames(XmlPath);
 
-            // Read XML using XMLDocument
+            // Extract playlists and folders from XML file
             (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlParser.ExtractFoldersAndPlaylists(XmlPath);
 
             // Organize folders
             List<msFolder> Folders = FoldersAndPlaylist.Item1;
             List<msPlaylist> Playlists = FoldersAndPlaylist.Item2;
-            playlistController.OrganizeFoldersAndPlaylists(Folders, Playlists);
+            List<msFolder> OrganizedPlaylists = playlistOrganizer.OrganizeFoldersAndPlaylists(Folders, Playlists);
+
+            // Create folders and M3U playlist in a directory
+            M3UExporter.ExportFoldersAndPlaylists(OrganizedPlaylists, exportDirectory);
 
             //DeserializeXMl();
 
+            Console.WriteLine("Done.");
             Console.ReadLine();
         }
 
