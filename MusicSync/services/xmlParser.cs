@@ -64,12 +64,10 @@ namespace MusicSync
                     Owner = OwnerNode.NextSibling.InnerText;
                 }
 
-                Boolean isFolder = false;
                 XmlNode keyFolder = PlaylistNode.SelectSingleNode("key[text()='Folder']");
 
                 if (keyFolder != null)
                 {
-                    isFolder = true;
                     msFolder Folder = new msFolder
                     {
                         Id = Id,
