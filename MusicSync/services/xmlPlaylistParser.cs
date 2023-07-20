@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace MusicSync
 {
-    public static class xmlParser
+    public static class xmlPlaylistParser
     {
 
         public static XmlDocument LoadXml(string filePath)
@@ -22,7 +22,7 @@ namespace MusicSync
             XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(29)
-                .Take(5)
+                .Take(25)
                 .ToList();
             return PlaylistNodes;
         }

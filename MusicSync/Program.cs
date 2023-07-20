@@ -15,12 +15,19 @@ namespace MusicSync
         {
             string XmlPath = @"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml";
             string exportDirectory = @"C:\Users\Admin\Music\Cayin\Playlists";
+            XmlDocument xmlDoc = new XmlDocument();
 
-            // Init: Get playlist names
-            xmlParser.ExtractPlaylistNames(XmlPath);
+            // Test date
+            DateTime testDate = new DateTime(2023, 7, 1);
+
+            // Identify newly added tracks
+            xmlLibraryParser.GetTracksAddedAfterDate(XmlPath, testDate);
+
+            // Test: extract playlist names
+            xmlPlaylistParser.ExtractPlaylistNames(XmlPath);
 
             // Extract playlists and folders from XML file
-            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlParser.ExtractFoldersAndPlaylists(XmlPath);
+            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(XmlPath);
 
             // Organize folders
             List<msFolder> Folders = FoldersAndPlaylist.Item1;
