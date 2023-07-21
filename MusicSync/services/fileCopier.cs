@@ -22,7 +22,7 @@ namespace MusicSync.services
                 string trackFilePath = GetTrackFilePath(filePath, trackId);
                 if (!string.IsNullOrEmpty(trackFilePath))
                 {
-                    string destinationFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath));
+                    string destinationFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath)).Replace('\\', '/').Replace("@","");
 
                     try
                     {
@@ -49,7 +49,7 @@ namespace MusicSync.services
             XmlNode trackNode = xmlFinder.FindTrackByID(filePath, intTrackId);
 
             XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
-            string location = locationNode.NextSibling.InnerText;
+            string location = locationNode.NextSibling.InnerText.Replace("%20", " ").Replace("file://localhost/","");
             return location;
         }
     }
