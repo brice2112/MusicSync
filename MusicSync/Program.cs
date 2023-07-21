@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
+using MusicSync.services;
 
 namespace MusicSync
 {
@@ -27,7 +28,11 @@ namespace MusicSync
             DateTime testDate = new DateTime(2023, 7, 1);
 
             // Identify newly added tracks
-            xmlLibraryParser.GetTracksAddedAfterDate(xmlDoc, testDate);
+            List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(xmlDoc, testDate);
+
+            // TEST  => Copy tracks to a folder
+            string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
+            fileCopier.CopyTracksByIds(xmlPath, newlyAddedTrackIds, folder);
 
             // Test: extract playlist names
             xmlPlaylistParser.ExtractPlaylistNames(xmlDoc);
