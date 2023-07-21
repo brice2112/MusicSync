@@ -10,16 +10,11 @@ namespace MusicSync
     public static class xmlPlaylistParser
     {
 
-        public static XmlDocument LoadXml(string filePath)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filePath);
-            return xmlDoc;
-        }
 
-        public static List<XmlNode> LoadPlaylists(string filePath)
+
+        public static List<XmlNode> LoadPlaylists(XmlDocument xmlDoc)
         {
-            XmlNodeList TempPlaylistNodes = LoadXml(filePath).SelectNodes("//dict[key/text()='Playlist ID']");
+            XmlNodeList TempPlaylistNodes = xmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(29)
                 .Take(25)
@@ -27,10 +22,10 @@ namespace MusicSync
             return PlaylistNodes;
         }
 
-        public static List<String> ExtractPlaylistNames(string filePath)
+        public static List<String> ExtractPlaylistNames(XmlDocument xmlDoc)
         {
             List<string> PlaylistNames = new List<String>();
-            List<XmlNode> PlaylistNodes = LoadPlaylists(filePath);
+            List<XmlNode> PlaylistNodes = LoadPlaylists(xmlDoc);
             foreach (XmlNode PlaylistNode in PlaylistNodes)
             {
                 XmlNode nameNode = PlaylistNode.SelectSingleNode("key[text()='Name']");
@@ -41,14 +36,14 @@ namespace MusicSync
             return PlaylistNames;
          }
 
-        public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(string filePath)
+        public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(XmlDocument xmlDoc, string filePath)
         {
             (msFolder, msPlaylist) Output;
             List<msFolder> Folders = new List<msFolder>();
             List<msPlaylist> Playlists = new List<msPlaylist>();
 
-            List<XmlNode> PlaylistNodes = LoadPlaylists(filePath);
-
+            List<XmlNode> PlaylistNodes = LoadPlaylists(xmlDoc);
+             
             foreach (XmlNode PlaylistNode in PlaylistNodes)
             {
                 XmlNode nameNode = PlaylistNode.SelectSingleNode("key[text()='Name']");

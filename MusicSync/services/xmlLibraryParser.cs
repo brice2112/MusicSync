@@ -11,13 +11,9 @@ namespace MusicSync
 {
     public static class xmlLibraryParser
     {
-
-        public static List<string> GetTracksAddedAfterDate(string xmlFilePath, DateTime fromDate)
+        public static List<string> GetTracksAddedAfterDate(XmlDocument xmlDoc, DateTime fromDate)
         {
             List<string> tracksAddedAfterDate = new List<string>();
-
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(xmlFilePath);
 
             string xPathExpression = "//key[text()='Tracks']/following-sibling::dict[1]";
             XmlNode trackDictNode = xmlDoc.SelectSingleNode(xPathExpression);
@@ -49,24 +45,6 @@ namespace MusicSync
             return tracksAddedAfterDate;
         }
 
-        public static List<string> GetKeysForTracksAddedAfterDateLinq(string xmlFilePath, DateTime fromDate)
-        {
-            List<string> keysForTracksAddedAfterDate = new List<string>();
-
-            XDocument xmlDoc = XDocument.Load(xmlFilePath);
-
-            var trackKeys = xmlDoc.Descendants("key")
-                .Where(key => key.Value == "Date Added")
-                .SelectMany(key => key.ElementsAfterSelf("date"))
-                .Where(date => DateTime.Parse(date.Value) > fromDate)
-                .Select(date => date.PreviousNode)
-                .OfType<XElement>()
-                .Select(key => key.Value);
-
-            keysForTracksAddedAfterDate.AddRange(trackKeys);
-
-            return keysForTracksAddedAfterDate;
-        }
 
 
     }
