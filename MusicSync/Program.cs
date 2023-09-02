@@ -3,42 +3,45 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using MusicSync.services;
+using System.Runtime.CompilerServices;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MusicSync
 {
-    internal static class Program
+    public static class Program
     {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
+        /// 
         [STAThread]
         static void Main()
         {
-            // Main Properties
+            // Load main properties from XML settings file
             // // // // //
-            string xmlPath = @"C:\Users\Admin\Music\iTunes\iTunes Music Library.xml";
-            string exportDirectory = @"C:\Users\Admin\Music\Cayin\Playlists";
-            XmlDocument xmlDoc = new XmlDocument();
+            Dictionary<String, String> settingsTable = SettingsHandler.InitSettingsLoad();
             // // // // //
 
-            //Load Xml
-            xmlDoc = LoadXml(xmlPath);
+            //Load iTunes Xml
+            XmlDocument iTunesXmlDoc = new();
+            iTunesXmlDoc = SettingsHandler.LoadXml(settingsTable["iTunesXmlPath"]);
 
-            // Test date
-            DateTime testDate = new DateTime(2023, 7, 1);
+            // Get last sync date
+            DateTime lastSyncDate = DateTime.Parse(settingsTable["lastSyncDate"]);
 
             // Identify newly added tracks
-            List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(xmlDoc, testDate);
+            List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesXmlDoc, lastSyncDate);
 
             // TEST  => Copy tracks to a folder
             string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
-            fileCopier.CopyTracksByIds(xmlPath, newlyAddedTrackIds, folder);
+            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, folder);
 
             // Test: extract playlist names
-            xmlPlaylistParser.ExtractPlaylistNames(xmlDoc);
+            xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
 
             // Extract playlists and folders from XML file
-            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(xmlDoc, xmlPath);
+            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, settingsTable["iTunesXmlPath"]);
 
             // Organize folders
             List<msFolder> Folders = FoldersAndPlaylist.Item1;
@@ -46,49 +49,17 @@ namespace MusicSync
             List<msFolder> OrganizedPlaylists = playlistOrganizer.OrganizeFoldersAndPlaylists(Folders, Playlists);
 
             // Create folders and M3U playlist in a directory
-            M3UExporter.ExportFoldersAndPlaylists(OrganizedPlaylists, exportDirectory);
+            M3UExporter.ExportFoldersAndPlaylists(OrganizedPlaylists, settingsTable["exportDirectory"]);
+
+            // Save settings file
+            SettingsHandler.SaveSyncDate();
 
             //DeserializeXMl();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
-
-
-            //static void ReadXml(string filePath)
-            //{
-            //    XmlDocument doc = new XmlDocument();
-            //    doc.Load(filePath);
-            //    XmlElement Root = doc.DocumentElement;
-            //    if (Root != null)
-            //    {
-            //        foreach (XmlNode node in Root.ChildNodes)
-            //        {
-            //            String Header = node.InnerText;
-            //            String Value = "";
-            //            if (node.NextSibling != null)
-            //            {
-            //                Value = node.NextSibling.InnerText;
-            //            }
-
-            //            Console.WriteLine($"{Header} - {Value}");
-            //        }
-            //    }
-            //}
-
-            //static void DeserializeXMl()
-            //{
-            //    XmlReader xmlDoc = XmlReader.Create(@"C:\Users\Admin\source\repos\MusicSync\MusicSync\test.xml");
-            //    XmlSerializer xmlSer = new XmlSerializer(typeof(String));
-            //    String deser = (string)xmlSer.Deserialize(xmlDoc);
-            //    Console.WriteLine(deser );
-            //}
         }
 
-        static XmlDocument LoadXml(string filePath)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filePath);
-            return xmlDoc;
-        }
+
     }
 }

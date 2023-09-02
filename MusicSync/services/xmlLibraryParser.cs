@@ -11,12 +11,12 @@ namespace MusicSync
 {
     public static class xmlLibraryParser
     {
-        public static List<string> GetTracksAddedAfterDate(XmlDocument xmlDoc, DateTime fromDate)
+        public static List<string> GetTracksAddedAfterDate(XmlDocument iTunesXmlDoc, DateTime fromDate)
         {
             List<string> tracksAddedAfterDate = new List<string>();
 
             string xPathExpression = "//key[text()='Tracks']/following-sibling::dict[1]";
-            XmlNode trackDictNode = xmlDoc.SelectSingleNode(xPathExpression);
+            XmlNode trackDictNode = iTunesXmlDoc.SelectSingleNode(xPathExpression);
 
             if (trackDictNode != null)
             {

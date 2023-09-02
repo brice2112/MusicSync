@@ -12,9 +12,9 @@ namespace MusicSync
 
 
 
-        public static List<XmlNode> LoadPlaylists(XmlDocument xmlDoc)
+        public static List<XmlNode> LoadPlaylists(XmlDocument iTunesXmlDoc)
         {
-            XmlNodeList TempPlaylistNodes = xmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
+            XmlNodeList TempPlaylistNodes = iTunesXmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
             List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
                 .Skip(29)
                 .Take(25)
@@ -22,10 +22,10 @@ namespace MusicSync
             return PlaylistNodes;
         }
 
-        public static List<String> ExtractPlaylistNames(XmlDocument xmlDoc)
+        public static List<String> ExtractPlaylistNames(XmlDocument iTunesXmlDoc)
         {
             List<string> PlaylistNames = new List<String>();
-            List<XmlNode> PlaylistNodes = LoadPlaylists(xmlDoc);
+            List<XmlNode> PlaylistNodes = LoadPlaylists(iTunesXmlDoc);
             foreach (XmlNode PlaylistNode in PlaylistNodes)
             {
                 XmlNode nameNode = PlaylistNode.SelectSingleNode("key[text()='Name']");
@@ -36,13 +36,13 @@ namespace MusicSync
             return PlaylistNames;
          }
 
-        public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(XmlDocument xmlDoc, string filePath)
+        public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(XmlDocument iTunesXmlDoc, string filePath)
         {
             (msFolder, msPlaylist) Output;
             List<msFolder> Folders = new List<msFolder>();
             List<msPlaylist> Playlists = new List<msPlaylist>();
 
-            List<XmlNode> PlaylistNodes = LoadPlaylists(xmlDoc);
+            List<XmlNode> PlaylistNodes = LoadPlaylists(iTunesXmlDoc);
              
             foreach (XmlNode PlaylistNode in PlaylistNodes)
             {

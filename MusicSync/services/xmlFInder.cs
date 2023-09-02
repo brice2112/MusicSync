@@ -31,11 +31,11 @@ namespace MusicSync
                 // Wrap the matched XML in a root element
                 string wrappedXml = $"<root>{matchedXml}</root>";
 
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(wrappedXml);
+                XmlDocument iTunesXmlDoc = new XmlDocument();
+                iTunesXmlDoc.LoadXml(wrappedXml);
 
                 // Get the first parsed XML node of the track
-                XmlNode trackNode = xmlDoc.DocumentElement.SelectSingleNode("//dict");
+                XmlNode trackNode = iTunesXmlDoc.DocumentElement.SelectSingleNode("//dict");
                 return trackNode;
             }
             else
