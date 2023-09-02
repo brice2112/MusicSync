@@ -20,6 +20,7 @@ namespace MusicSync
         {
             // Load main properties from XML settings file
             // // // // //
+            string toto = "toto";
             Dictionary<String, String> settingsTable = SettingsHandler.InitSettingsLoad();
             // // // // //
 

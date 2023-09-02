@@ -4,13 +4,12 @@ using System.Xml;
 
 namespace MusicSync
 {
-	public class SettingsHandler
+	public static class SettingsHandler
 	{
 
         public static string appXmlPath = AppContext.BaseDirectory + @"\appsettings.xml";
 
         // // // // LOAD METHODS
-
         public static Dictionary<String, String> InitSettingsLoad()
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
@@ -30,17 +29,17 @@ namespace MusicSync
         private static Dictionary<String, String> LoadSettingsValues(XmlDocument settingsDoc)
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
-            result.Add("iTunesXmlPath", settingsDoc.SelectSingleNode("itunesxmlpath").InnerText);
+            XmlNode node = settingsDoc.SelectSingleNode("/settings/itunesxmlpath");
+            result.Add("iTunesXmlPath", node.InnerText);
             result.Add("exportDirectory", settingsDoc.SelectSingleNode("exportdirectory").InnerText);
             result.Add("lastSyncDate", settingsDoc.SelectSingleNode("lastsyncdate").InnerText);
             return result;
         }
 
-
         // // // // SAVE METHODS
-        public static void SaveSyncDate(XmlDocument settingsDoc)
+        public static void SaveSyncDate()
         {
-            settingsDoc = LoadXml(appXmlPath);
+            XmlDocument settingsDoc = LoadXml(appXmlPath);
             DateTime now = DateTime.Now;
             String syncDate = now.ToString();
             XmlNode dateNode = settingsDoc.DocumentElement.SelectSingleNode("lastsyncdate");
@@ -49,5 +48,3 @@ namespace MusicSync
         }
     }
 }
-
-
