@@ -15,10 +15,17 @@ namespace MusicSync
         public static List<XmlNode> LoadPlaylists(XmlDocument iTunesXmlDoc)
         {
             XmlNodeList TempPlaylistNodes = iTunesXmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
-            List<XmlNode> PlaylistNodes = TempPlaylistNodes.Cast<XmlNode>()
-                .Skip(29)
-                .Take(25)
-                .ToList();
+            XmlNodeList PlaylistNodesToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='7CD4236868E61545']]");
+            //XmlNodeList FilteredPlaylistNodes = iTunesXmlDoc.CreateNode(XmlNodeType.Element, "root", null).ChildNodes;
+            List<XmlNode> PlaylistNodes = new List<XmlNode>();
+
+            foreach (XmlNode node in TempPlaylistNodes)
+            {
+                if (!ContainsNode(PlaylistNodesToExclude, node))
+                {
+                    PlaylistNodes.Add(node.Clone());
+                }
+            }
             return PlaylistNodes;
         }
 
@@ -136,6 +143,18 @@ namespace MusicSync
             }
 
             return null;
+        }
+
+        private static bool ContainsNode(XmlNodeList nodeList, XmlNode nodeToCheck)
+        {
+            foreach (XmlNode node in nodeList)
+            {
+                if (node.OuterXml == nodeToCheck.OuterXml)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

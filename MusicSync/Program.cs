@@ -6,6 +6,7 @@ using MusicSync.services;
 using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace MusicSync
 {
@@ -20,7 +21,6 @@ namespace MusicSync
         {
             // Load main properties from XML settings file
             // // // // //
-            string toto = "toto";
             Dictionary<String, String> settingsTable = SettingsHandler.InitSettingsLoad();
             // // // // //
 
@@ -29,7 +29,7 @@ namespace MusicSync
             iTunesXmlDoc = SettingsHandler.LoadXml(settingsTable["iTunesXmlPath"]);
 
             // Get last sync date
-            DateTime lastSyncDate = DateTime.Parse(settingsTable["lastSyncDate"]);
+            DateTime lastSyncDate = DateTime.ParseExact(settingsTable["lastSyncDate"], "yyyyMMdd", CultureInfo.InvariantCulture);
 
             // Identify newly added tracks
             List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesXmlDoc, lastSyncDate);

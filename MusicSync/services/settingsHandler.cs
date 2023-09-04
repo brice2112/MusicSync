@@ -12,10 +12,9 @@ namespace MusicSync
         // // // // LOAD METHODS
         public static Dictionary<String, String> InitSettingsLoad()
         {
-            Dictionary<String, String> result = new Dictionary<String, String>();
             XmlDocument settingsDoc = new XmlDocument();
             settingsDoc = LoadXml(appXmlPath);
-            Dictionary<String, String> settingsTable = LoadSettingsValues(settingsDoc);
+            Dictionary<String, String> result = LoadSettingsValues(settingsDoc);
             return result;
         }
 
@@ -29,10 +28,9 @@ namespace MusicSync
         private static Dictionary<String, String> LoadSettingsValues(XmlDocument settingsDoc)
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
-            XmlNode node = settingsDoc.SelectSingleNode("/settings/itunesxmlpath");
-            result.Add("iTunesXmlPath", node.InnerText);
-            result.Add("exportDirectory", settingsDoc.SelectSingleNode("exportdirectory").InnerText);
-            result.Add("lastSyncDate", settingsDoc.SelectSingleNode("lastsyncdate").InnerText);
+            result.Add("iTunesXmlPath", settingsDoc.SelectSingleNode("/settings/itunesxmlpath").InnerText);
+            result.Add("exportDirectory", settingsDoc.SelectSingleNode("/settings/exportdirectory").InnerText);
+            result.Add("lastSyncDate", settingsDoc.SelectSingleNode("/settings/lastsyncdate").InnerText);
             return result;
         }
 
@@ -41,9 +39,9 @@ namespace MusicSync
         {
             XmlDocument settingsDoc = LoadXml(appXmlPath);
             DateTime now = DateTime.Now;
-            String syncDate = now.ToString();
-            XmlNode dateNode = settingsDoc.DocumentElement.SelectSingleNode("lastsyncdate");
-            dateNode.Value = syncDate;
+            String syncDate = now.ToString("yyyyMMdd");
+            XmlNode dateNode = settingsDoc.SelectSingleNode("/settings/lastsyncdate");
+            dateNode.InnerText = syncDate;
             settingsDoc.Save(appXmlPath);
         }
     }
