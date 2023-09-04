@@ -29,6 +29,7 @@ namespace MusicSync
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
             result.Add("iTunesXmlPath", settingsDoc.SelectSingleNode("/settings/itunesxmlpath").InnerText);
+            result.Add("collectionsFolderID", settingsDoc.SelectSingleNode("/settings/collectionsfolderid").InnerText);
             result.Add("exportDirectory", settingsDoc.SelectSingleNode("/settings/exportdirectory").InnerText);
             result.Add("lastSyncDate", settingsDoc.SelectSingleNode("/settings/lastsyncdate").InnerText);
             return result;

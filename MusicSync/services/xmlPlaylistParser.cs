@@ -14,9 +14,9 @@ namespace MusicSync
 
         public static List<XmlNode> LoadPlaylists(XmlDocument iTunesXmlDoc)
         {
+            string CollectionID = SettingsHandler.InitSettingsLoad()["collectionsFolderID"];
             XmlNodeList TempPlaylistNodes = iTunesXmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
-            XmlNodeList PlaylistNodesToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='7CD4236868E61545']]");
-            //XmlNodeList FilteredPlaylistNodes = iTunesXmlDoc.CreateNode(XmlNodeType.Element, "root", null).ChildNodes;
+            XmlNodeList PlaylistNodesToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='" + CollectionID + "']]");
             List<XmlNode> PlaylistNodes = new List<XmlNode>();
 
             foreach (XmlNode node in TempPlaylistNodes)
@@ -39,6 +39,8 @@ namespace MusicSync
                 string PlaylistName = nameNode.NextSibling.InnerText;
                 PlaylistNames.Add(PlaylistName);
             }
+
+            //Exclude 
 
             return PlaylistNames;
          }

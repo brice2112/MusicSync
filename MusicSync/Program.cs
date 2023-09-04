@@ -24,7 +24,7 @@ namespace MusicSync
             Dictionary<String, String> settingsTable = SettingsHandler.InitSettingsLoad();
             // // // // //
 
-            //Load iTunes Xml
+            // Load iTunes Xml
             XmlDocument iTunesXmlDoc = new();
             iTunesXmlDoc = SettingsHandler.LoadXml(settingsTable["iTunesXmlPath"]);
 
@@ -34,11 +34,11 @@ namespace MusicSync
             // Identify newly added tracks
             List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesXmlDoc, lastSyncDate);
 
-            // TEST  => Copy tracks to a folder
+            // Copy tracks to a folder
             string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
             fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, folder);
 
-            // Test: extract playlist names
+            // Extract playlist names
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
 
             // Extract playlists and folders from XML file
