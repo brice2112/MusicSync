@@ -27,19 +27,12 @@ namespace MusicSync
             XmlNodeList CollectionsToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='" + CollectionID + "']]");
 
             // -> Other big and pointless playlists
-            //string excludeXpath = "//dict[key[text()='Name']/following-sibling::string[text()='Library'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='Downloaded'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='Music'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='Movies'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='TV Shows'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='Podcasts'] | " +
-            //                      "//dict[key[text()='Name']/following-sibling::string[text()='Audiobooks']]";
-            string excludeXpath = "//dict[key[text()='Name']/following-sibling::string[text()='Library']";
+            string excludeXpath = "//dict[key='Name' and (string='Library' or string='Downloaded' or string='Music' or string='Movies' or string='TV Shows' or string='Podcasts' or string='Audiobooks' or string='Collections' or string='Purchased')]";
 
             XmlNodeList OtherPlaylistsToExclude = iTunesXmlDoc.SelectNodes(excludeXpath);
 
+            // Construct list of XmlNodes by adding playlists not included in the 'PlaylistsToExclude' lists
             List<XmlNode> PlaylistNodes = new List<XmlNode>();
-
             foreach (XmlNode node in TempPlaylistNodes)
             {
                 if (!ContainsNode(CollectionsToExclude, node) && (!ContainsNode(OtherPlaylistsToExclude, node)))
@@ -50,6 +43,11 @@ namespace MusicSync
             return PlaylistNodes;
         }
 
+        /// <summary>
+        /// Get the list of playlists as XmlNodes and returns it as a list of strings
+        /// </summary>
+        /// <param name="iTunesXmlDoc"></param>
+        /// <returns></returns>
         public static List<String> ExtractPlaylistNames(XmlDocument iTunesXmlDoc)
         {
             List<string> PlaylistNames = new List<String>();
@@ -66,24 +64,32 @@ namespace MusicSync
             return PlaylistNames;
          }
 
+        /// <summary>
+        /// Create instances of Folders and Playlists from the iTunes
+        /// </summary>
+        /// <param name="iTunesXmlDoc"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static (List<msFolder>, List<msPlaylist>) ExtractFoldersAndPlaylists(XmlDocument iTunesXmlDoc, string filePath)
         {
             (msFolder, msPlaylist) Output;
             List<msFolder> Folders = new List<msFolder>();
             List<msPlaylist> Playlists = new List<msPlaylist>();
 
+            // Extract list of playlists as XML nodes from XML doc
             List<XmlNode> PlaylistNodes = LoadPlaylists(iTunesXmlDoc);
              
+            // Loops on each node and sorts them in folders and playlists
             foreach (XmlNode PlaylistNode in PlaylistNodes)
             {
                 XmlNode nameNode = PlaylistNode.SelectSingleNode("key[text()='Name']");
-                string Name = nameNode.NextSibling.InnerText;
-                
+                string Name = nameNode.NextSibling.InnerText;            
                 XmlNode IdNode = PlaylistNode.SelectSingleNode("key[text()='Playlist Persistent ID']");
                 string Id = IdNode.NextSibling.InnerText;
-
                 string Owner = "0";
                 XmlNode OwnerNode = PlaylistNode.SelectSingleNode("key[text()='Parent Persistent ID']");
+
+                // Case when it's a folder
                 if (OwnerNode != null)
                 {
                     Owner = OwnerNode.NextSibling.InnerText;
@@ -91,6 +97,7 @@ namespace MusicSync
 
                 XmlNode keyFolder = PlaylistNode.SelectSingleNode("key[text()='Folder']");
 
+                // Creates an instance of the Folder object and add it to the final list
                 if (keyFolder != null)
                 {
                     msFolder Folder = new msFolder
@@ -102,9 +109,10 @@ namespace MusicSync
                     Folders.Add(Folder);
                     Console.WriteLine($"Folder : {Folder.Name} added");
                 }
+
+                // Case when it's a playlist
                 else
                 {
-
                     XmlNodeList trackIDsNode = PlaylistNode.SelectNodes("key[text()='Playlist Items']/following-sibling::array/dict/key[text()='Track ID']/following-sibling::integer");
 
                     if (nameNode != null && trackIDsNode != null)
@@ -120,6 +128,7 @@ namespace MusicSync
                             }
                         }
 
+                        // Creates an instance of the Playlist object and add it to the final list
                         msPlaylist Playlist = new msPlaylist
                         {
                             Id = Id,
@@ -138,6 +147,12 @@ namespace MusicSync
             return (Folders, Playlists);
         }
 
+        /// <summary>
+        /// Get track info from track ID in XML file and instanciates a new Track object
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="trackID"></param>
+        /// <returns></returns>
         private static msTrack GetTrackInfo(string filePath, int trackID)
         {
             XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackID);
@@ -167,6 +182,9 @@ namespace MusicSync
 
             return null;
         }
+
+
+        // --- PRIVATE METHODS --- //
 
         private static bool ContainsNode(XmlNodeList nodeList, XmlNode nodeToCheck)
         {

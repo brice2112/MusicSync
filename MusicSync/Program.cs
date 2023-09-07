@@ -36,7 +36,7 @@ namespace MusicSync
 
             // Copy tracks to a folder
             string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
-            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, folder);
+            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, settingsTable["exportDirectory"]);
 
             // Extract playlist names
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);

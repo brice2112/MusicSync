@@ -11,6 +11,12 @@ namespace MusicSync
 {
     public static class xmlLibraryParser
     {
+        /// <summary>
+        /// Scans and gets all tracks added in iTunes after the last sync date
+        /// </summary>
+        /// <param name="iTunesXmlDoc"></param>
+        /// <param name="fromDate"></param>
+        /// <returns></returns>
         public static List<string> GetTracksAddedAfterDate(XmlDocument iTunesXmlDoc, DateTime fromDate)
         {
             List<string> tracksAddedAfterDate = new List<string>();
