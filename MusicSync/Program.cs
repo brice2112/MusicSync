@@ -36,8 +36,8 @@ namespace MusicSync
             List<msTrack> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesFilePath, iTunesXmlDoc, lastSyncDate);
 
             // Copy tracks to a folder
-            string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
-            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, settingsTable["exportDirectory"]);
+            Console.WriteLine("Copy tracks");
+            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, settingsTable["exportDirectory"]+"/Songs");
 
             // Extract playlist names
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);

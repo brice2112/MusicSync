@@ -8,9 +8,11 @@ namespace MusicSync
 {
     public class msTrack
     {
-        public int TrackID { get; set; }
+        public string TrackID { get; set; }
         public string Title { get; set; }
         public string Artist { get; set; }
+        public string AlbumArtist { get; set; }
+        public string Album { get; set; }
         public string Location { get; set; }
         public DateTime dateAdded { get; set; }
     }

@@ -39,7 +39,7 @@ namespace MusicSync
                                 XmlNode trackTypeNode = trackNode.SelectSingleNode("key[text()='Track Type']/following-sibling::string");
                                 if (trackTypeNode != null && trackTypeNode.InnerText == "File")
                                 {
-                                    int trackID = Int32.Parse(trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText);
+                                    string trackID = trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText;
                                     msTrack track = GetTrackInfo(iTunesFilePath, trackID);
                                     tracksAddedAfterDate.Add(track);
                                 }
@@ -58,19 +58,31 @@ namespace MusicSync
         /// <param name="filePath"></param>
         /// <param name="trackID"></param>
         /// <returns></returns>
-        public static msTrack GetTrackInfo(string filePath, int trackID)
+        public static msTrack GetTrackInfo(string filePath, string trackID)
         {
             XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackID);
             if (trackNode != null)
             {
                 XmlNode titleNode = trackNode.SelectSingleNode("key[text()='Name']");
                 XmlNode artistNode = trackNode.SelectSingleNode("key[text()='Artist']");
+                XmlNode albumArtistNode = trackNode.SelectSingleNode("key[text()='Album Artist']");
+                XmlNode albumNode = trackNode.SelectSingleNode("key[text()='Album']");
                 XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
 
                 if (titleNode != null && artistNode != null)
                 {
                     string title = titleNode.NextSibling.InnerText;
                     string artist = artistNode.NextSibling.InnerText;
+                    string albumArtist;
+                    try
+                    {
+                        albumArtist = albumArtistNode.NextSibling.InnerText;
+                    }
+                    catch (NullReferenceException)
+                    {
+                        albumArtist = "Compilations";
+                    }
+                    string album = albumNode.NextSibling.InnerText;
                     string location = locationNode.NextSibling.InnerText;
 
                     msTrack track = new msTrack
@@ -78,6 +90,8 @@ namespace MusicSync
                         TrackID = trackID,
                         Title = title,
                         Artist = artist,
+                        AlbumArtist = albumArtist,
+                        Album = album,
                         Location = location
                     };
 

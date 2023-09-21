@@ -23,37 +23,42 @@ namespace MusicSync.services
                 return;
             }
 
-            foreach (string trackId in tracks)
-            {
-                string trackFilePath = GetTrackFilePath(filePath, trackId);
+            for (int i = 0; i < tracks.Count; ++i)
+                {
+                msTrack track = tracks[i];
+                Console.Write("\rCopying new tracks...{0}%   ", i);
+                Console.WriteLine();
+
+                string trackFilePath = GetTrackFilePath(filePath, track);
                 if (!string.IsNullOrEmpty(trackFilePath))
                 {
-                    string rootDestFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath)).Replace('\\', '/').Replace("@","");
-                    string DestFilePath = rootDestFilePath + 
+                    string rootDestFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath));
+                    //string destTrackFilePath = $@"{rootDestFilePath}/{track.AlbumArtist}/{track.Album}/{Path.GetFileName(trackFilePath).Replace('\\', '/').Replace("@", "")}";
+                    string destTrackFilePath = $@"{rootDestFilePath}/{track.AlbumArtist}/{track.Album}/{Path.GetFileName(trackFilePath)}";
 
                     try
                     {
-                        File.Copy(trackFilePath, destinationFilePath, true);
-                        Console.WriteLine($"Copied track with ID: {trackId} to {destinationFilePath}");
+                        File.Copy(trackFilePath, destTrackFilePath, true);
+                        Console.WriteLine($"Copied track with ID: {track} to {destTrackFilePath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error copying track with ID: {trackId}. {ex.Message}");
+                        Console.WriteLine($"Error copying track with ID: {track}. {ex.Message}");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Track with ID: {trackId} not found in the XML data.");
+                    Console.WriteLine($"Track with ID: {track} not found in the XML data.");
                 }
             }
         }
 
-        private static string GetTrackFilePath(string filePath, string trackId)
+        private static string GetTrackFilePath(string filePath, msTrack track)
         {
             // Implement the method to retrieve the file path for the given track ID
             // using XPath or LINQ to XML, similar to the previous methods.
-            int intTrackId = int.Parse(trackId);
-            XmlNode trackNode = xmlFinder.FindTrackByID(filePath, intTrackId);
+            string trackId = track.TrackID;
+            XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackId);
 
             XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
             string location = locationNode.NextSibling.InnerText.Replace("%20", " ").Replace("file://localhost/","");

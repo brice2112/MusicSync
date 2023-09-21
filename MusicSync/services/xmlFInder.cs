@@ -13,12 +13,11 @@ namespace MusicSync
     public static class xmlFinder
     {
 
-        public static XmlNode FindTrackByID(string filePath, int intTrackID)
+        public static XmlNode FindTrackByID(string filePath, string trackID)
         {
-            string trackID = intTrackID.ToString();
             string xmlText = File.ReadAllText(filePath);
 
-            string pattern = $"<key>{trackID}</key>\\s*<dict>";
+            string pattern = $"<key>Persistent ID</key><string>{trackID}</string>";
             Match match = Regex.Match(xmlText, pattern);
 
             if (match.Success)

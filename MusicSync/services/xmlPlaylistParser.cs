@@ -120,7 +120,7 @@ namespace MusicSync
                         List<msTrack> tracks = new List<msTrack>();
                         foreach (XmlNode trackIDNode in trackIDsNode)
                         {
-                            int trackID = int.Parse(trackIDNode.InnerText);
+                            string trackID = trackIDNode.InnerText;
                             msTrack track = xmlLibraryParser.GetTrackInfo(filePath, trackID);
                             if (track != null)
                             {
