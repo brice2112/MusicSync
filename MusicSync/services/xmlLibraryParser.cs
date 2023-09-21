@@ -12,14 +12,14 @@ namespace MusicSync
     public static class xmlLibraryParser
     {
         /// <summary>
-        /// Scans and gets all tracks added in iTunes after the last sync date
+        /// Scans and gets all tracks added in iTunes after the last sync date. Returns a list of Track objects
         /// </summary>
         /// <param name="iTunesXmlDoc"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        public static List<string> GetTracksAddedAfterDate(XmlDocument iTunesXmlDoc, DateTime fromDate)
+        public static List<msTrack> GetTracksAddedAfterDate(string iTunesFilePath, XmlDocument iTunesXmlDoc, DateTime fromDate)
         {
-            List<string> tracksAddedAfterDate = new List<string>();
+            List<msTrack> tracksAddedAfterDate = new List<msTrack>();
 
             string xPathExpression = "//key[text()='Tracks']/following-sibling::dict[1]";
             XmlNode trackDictNode = iTunesXmlDoc.SelectSingleNode(xPathExpression);
@@ -39,8 +39,9 @@ namespace MusicSync
                                 XmlNode trackTypeNode = trackNode.SelectSingleNode("key[text()='Track Type']/following-sibling::string");
                                 if (trackTypeNode != null && trackTypeNode.InnerText == "File")
                                 {
-                                    // Here, you can access the <key> element of each track.
-                                    tracksAddedAfterDate.Add(trackNode.PreviousSibling.InnerText);
+                                    int trackID = Int32.Parse(trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText);
+                                    msTrack track = GetTrackInfo(iTunesFilePath, trackID);
+                                    tracksAddedAfterDate.Add(track);
                                 }
                             }
                         }
@@ -51,7 +52,41 @@ namespace MusicSync
             return tracksAddedAfterDate;
         }
 
+        /// <summary>
+        /// Get track info from track ID in XML file and instanciates a new Track object
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="trackID"></param>
+        /// <returns></returns>
+        public static msTrack GetTrackInfo(string filePath, int trackID)
+        {
+            XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackID);
+            if (trackNode != null)
+            {
+                XmlNode titleNode = trackNode.SelectSingleNode("key[text()='Name']");
+                XmlNode artistNode = trackNode.SelectSingleNode("key[text()='Artist']");
+                XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
 
+                if (titleNode != null && artistNode != null)
+                {
+                    string title = titleNode.NextSibling.InnerText;
+                    string artist = artistNode.NextSibling.InnerText;
+                    string location = locationNode.NextSibling.InnerText;
+
+                    msTrack track = new msTrack
+                    {
+                        TrackID = trackID,
+                        Title = title,
+                        Artist = artist,
+                        Location = location
+                    };
+
+                    return track;
+                }
+            }
+
+            return null;
+        }
 
     }
 }

@@ -28,11 +28,12 @@ namespace MusicSync
             XmlDocument iTunesXmlDoc = new();
             iTunesXmlDoc = SettingsHandler.LoadXml(settingsTable["iTunesXmlPath"]);
 
-            // Get last sync date
+            // Get iTUnes XML file path and last sync date
+            string iTunesFilePath = settingsTable["iTunesXmlPath"];
             DateTime lastSyncDate = DateTime.ParseExact(settingsTable["lastSyncDate"], "yyyyMMdd", CultureInfo.InvariantCulture);
 
             // Identify newly added tracks
-            List<string> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesXmlDoc, lastSyncDate);
+            List<msTrack> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesFilePath, iTunesXmlDoc, lastSyncDate);
 
             // Copy tracks to a folder
             string folder = "@C:\\Users\\Admin\\Music\\Cayin\\Songs";
@@ -42,7 +43,7 @@ namespace MusicSync
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
 
             // Extract playlists and folders from XML file
-            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, settingsTable["iTunesXmlPath"]);
+            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, iTunesFilePath);
 
             // Organize folders
             List<msFolder> Folders = FoldersAndPlaylist.Item1;
@@ -55,8 +56,7 @@ namespace MusicSync
             // Save settings file
             SettingsHandler.SaveSyncDate();
 
-            //DeserializeXMl();
-
+            // Finishing process
             Console.WriteLine("Done.");
             Console.ReadLine();
         }

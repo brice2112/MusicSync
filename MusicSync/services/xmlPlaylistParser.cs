@@ -121,7 +121,7 @@ namespace MusicSync
                         foreach (XmlNode trackIDNode in trackIDsNode)
                         {
                             int trackID = int.Parse(trackIDNode.InnerText);
-                            msTrack track = GetTrackInfo(filePath, trackID);
+                            msTrack track = xmlLibraryParser.GetTrackInfo(filePath, trackID);
                             if (track != null)
                             {
                                 tracks.Add(track);
@@ -142,47 +142,8 @@ namespace MusicSync
                     }
                 }
             }
-
-
             return (Folders, Playlists);
         }
-
-        /// <summary>
-        /// Get track info from track ID in XML file and instanciates a new Track object
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="trackID"></param>
-        /// <returns></returns>
-        private static msTrack GetTrackInfo(string filePath, int trackID)
-        {
-            XmlNode trackNode = xmlFinder.FindTrackByID(filePath, trackID);
-            if (trackNode != null)
-            {
-                XmlNode titleNode = trackNode.SelectSingleNode("key[text()='Name']");
-                XmlNode artistNode = trackNode.SelectSingleNode("key[text()='Artist']");
-                XmlNode locationNode = trackNode.SelectSingleNode("key[text()='Location']");
-
-                if (titleNode != null && artistNode != null)
-                {
-                    string title = titleNode.NextSibling.InnerText;
-                    string artist = artistNode.NextSibling.InnerText;
-                    string location = locationNode.NextSibling.InnerText;
-
-                    msTrack track = new msTrack
-                    {
-                        TrackID = trackID,
-                        Title = title,
-                        Artist = artist,
-                        Location = location
-                    };
-
-                    return track;
-                }
-            }
-
-            return null;
-        }
-
 
         // --- PRIVATE METHODS --- //
 

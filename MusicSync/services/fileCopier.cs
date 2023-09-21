@@ -9,20 +9,27 @@ namespace MusicSync.services
 {
     public static class fileCopier
     {
-        public static void CopyTracksByIds(string filePath, List<string> trackIds, string destinationFolder)
+        /// <summary>
+        /// Copy all the tracks listed in the input track list into the destination folder and sort them by artist and album
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="trackIds"></param>
+        /// <param name="destinationFolder"></param>
+        public static void CopyTracksByIds(string filePath, List<msTrack> tracks, string destinationFolder)
         {
-            if (trackIds == null || trackIds.Count == 0)
+            if (tracks == null || tracks.Count == 0)
             {
                 // No track IDs to copy, return early.
                 return;
             }
 
-            foreach (string trackId in trackIds)
+            foreach (string trackId in tracks)
             {
                 string trackFilePath = GetTrackFilePath(filePath, trackId);
                 if (!string.IsNullOrEmpty(trackFilePath))
                 {
-                    string destinationFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath)).Replace('\\', '/').Replace("@","");
+                    string rootDestFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath)).Replace('\\', '/').Replace("@","");
+                    string DestFilePath = rootDestFilePath + 
 
                     try
                     {
