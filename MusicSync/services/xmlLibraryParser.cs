@@ -17,7 +17,7 @@ namespace MusicSync
         /// <param name="iTunesXmlDoc"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        public static List<msTrack> GetTracksAddedAfterDate(string iTunesFilePath, XmlDocument iTunesXmlDoc, DateTime fromDate)
+        public static List<msTrack> GetTracksAddedAfterDate(string filePath, XmlDocument iTunesXmlDoc, DateTime fromDate)
         {
             List<msTrack> tracksAddedAfterDate = new List<msTrack>();
 
@@ -40,7 +40,7 @@ namespace MusicSync
                                 if (trackTypeNode != null && trackTypeNode.InnerText == "File")
                                 {
                                     string trackID = trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText;
-                                    msTrack track = GetTrackInfo(iTunesFilePath, trackID);
+                                    msTrack track = GetTrackInfo(filePath, trackID);
                                     tracksAddedAfterDate.Add(track);
                                 }
                             }

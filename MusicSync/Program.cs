@@ -25,7 +25,7 @@ namespace MusicSync
             // // // // //
 
             // Load iTunes Xml
-            XmlDocument iTunesXmlDoc = new();
+            XmlDocument iTunesXmlDoc;
             iTunesXmlDoc = SettingsHandler.LoadXml(settingsTable["iTunesXmlPath"]);
 
             // Get iTUnes XML file path and last sync date
@@ -33,7 +33,7 @@ namespace MusicSync
             DateTime lastSyncDate = DateTime.ParseExact(settingsTable["lastSyncDate"], "yyyyMMdd", CultureInfo.InvariantCulture);
 
             // Identify newly added tracks
-            List<msTrack> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(iTunesFilePath, iTunesXmlDoc, lastSyncDate);
+            List<msTrack> newlyAddedTrackIds = xmlLibraryParser.GetTracksAddedAfterDate(settingsTable["iTunesXmlPath"], iTunesXmlDoc, lastSyncDate);
 
             // Copy tracks to a folder
             Console.WriteLine("Copy tracks");
@@ -43,7 +43,7 @@ namespace MusicSync
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
 
             // Extract playlists and folders from XML file
-            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, iTunesFilePath);
+            (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, settingsTable["iTunesXmlPath"]);
 
             // Organize folders
             List<msFolder> Folders = FoldersAndPlaylist.Item1;

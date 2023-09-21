@@ -25,14 +25,6 @@ namespace MusicSync
             return iTunesXmlDoc;
         }
 
-        // Alternate method
-        public static XmlReader LoadXmlReader(string filePath)
-        {
-            XmlReaderSettings settings = new XmlReaderSettings(); // to be optimized
-            XmlReader iTunesXmlDoc = XmlReader.Create("yourXmlFile.xml", settings);
-            return iTunesXmlDoc;
-        }
-
         private static Dictionary<String, String> LoadSettingsValues(XmlDocument settingsDoc)
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
