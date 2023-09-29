@@ -27,8 +27,8 @@ namespace MusicSync.services
                 {
                 msTrack track = tracks[i];
                 int perc = (i / tracks.Count) * 100;
-                Console.Write("\rCopying new tracks...{0}%   ", perc);
-                Console.WriteLine();
+                //Console.Write("\rCopying new tracks...{0}%   ", perc);
+                //Console.WriteLine();
 
                 if (track==null) { continue; }
 
