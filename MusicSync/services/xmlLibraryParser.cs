@@ -39,9 +39,14 @@ namespace MusicSync
                                 XmlNode trackTypeNode = trackNode.SelectSingleNode("key[text()='Track Type']/following-sibling::string");
                                 if (trackTypeNode != null && trackTypeNode.InnerText == "File")
                                 {
-                                    string trackID = trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText;
-                                    msTrack track = GetTrackInfo(filePath, trackID);
-                                    tracksAddedAfterDate.Add(track);
+                                    XmlNode genreNode = trackNode.SelectSingleNode("key[text()='Genre']/following-sibling::string");
+                                    //if (genreNode != null && genreNode.InnerText != "Podcast")
+                                    //{
+                                        string trackID = trackNode.SelectSingleNode("key[text()='Track ID']/following-sibling::string").InnerText;
+                                        msTrack track = GetTrackInfo(filePath, trackID);
+                                        tracksAddedAfterDate.Add(track);
+                                    //}
+                               
                                 }
                             }
                         }

@@ -37,7 +37,7 @@ namespace MusicSync
 
             // Copy tracks to a folder
             Console.WriteLine("Copy tracks");
-            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, settingsTable["exportDirectory"]+"/Songs");
+            fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, Path.Combine(settingsTable["exportDirectory"], "Songs"));
 
             // Extract playlist names
             xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);

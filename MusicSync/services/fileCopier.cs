@@ -26,20 +26,25 @@ namespace MusicSync.services
             for (int i = 0; i < tracks.Count; ++i)
                 {
                 msTrack track = tracks[i];
-                Console.Write("\rCopying new tracks...{0}%   ", i);
+                int perc = (i / tracks.Count) * 100;
+                Console.Write("\rCopying new tracks...{0}%   ", perc);
                 Console.WriteLine();
+
+                if (track==null) { continue; }
 
                 string trackFilePath = GetTrackFilePath(filePath, track);
                 if (!string.IsNullOrEmpty(trackFilePath))
                 {
-                    string rootDestFilePath = Path.Combine(destinationFolder, Path.GetFileName(trackFilePath));
-                    //string destTrackFilePath = $@"{rootDestFilePath}/{track.AlbumArtist}/{track.Album}/{Path.GetFileName(trackFilePath).Replace('\\', '/').Replace("@", "")}";
-                    string destTrackFilePath = $@"{rootDestFilePath}/{track.AlbumArtist}/{track.Album}/{Path.GetFileName(trackFilePath)}";
-
+                    string destTrackFolder = Path.Combine(destinationFolder, track.AlbumArtist, track.Album);
+                    string destTrackFilePath = Path.Combine(destTrackFolder, Path.GetFileName(trackFilePath));
+                    if (!Path.Exists(destTrackFolder))
+                    {
+                        Directory.CreateDirectory(destTrackFolder);
+                    }
                     try
                     {
                         File.Copy(trackFilePath, destTrackFilePath, true);
-                        Console.WriteLine($"Copied track with ID: {track} to {destTrackFilePath}");
+                        //Console.WriteLine($"Copied track with ID: {track} to {destTrackFilePath}");
                     }
                     catch (Exception ex)
                     {
