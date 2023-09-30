@@ -29,11 +29,12 @@ namespace MusicSync
         public static List<String> getExcludedLists()
         {
             XmlDocument settingsDoc = LoadXml(appXmlPath);
-            var lists = new List<String>();
-            XmlNodeList listNodes = settingsDoc.SelectNodes("settings/excludedlists");
+            List<String> lists = new List<String>();
+            XmlNodeList listNodes = settingsDoc.SelectNodes("settings/excludedlists/list");
             foreach (XmlNode node in listNodes)
             {
-                lists.Append(node.InnerText);
+                lists.Add(node.InnerText);
+
             }
             return lists;
         }

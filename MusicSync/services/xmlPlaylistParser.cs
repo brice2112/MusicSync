@@ -10,46 +10,6 @@ namespace MusicSync
     public static class xmlPlaylistParser
     {
 
-
-        /// <summary>
-        /// Load playlists and exclude unwanted playlists (library & collections)
-        /// </summary>
-        /// <param name="iTunesXmlDoc"></param>
-        /// <returns></returns>
-        public static List<XmlNode> LoadPlaylists(XmlDocument iTunesXmlDoc)
-        {
-            // Initialize List of nodes for playlists in XML file
-            string CollectionID = SettingsHandler.InitSettingsLoad()["collectionsFolderID"];
-            XmlNodeList TempPlaylistNodes = iTunesXmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
-
-            // Gets playlists to exclude
-            // -> Collections playlists
-            XmlNodeList CollectionsToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='" + CollectionID + "']]");
-
-            // -> Other big and pointless playlists
-            //string excludeXpath = "//dict[key='Name' and (string='Library' or string='Downloaded' or string='Music' or string='Movies' or string='TV Shows' or string='Podcasts' or string='Audiobooks' or string='Collections' or string='Purchased')]";
-
-            List<XmlNode> listsToExclude = new List<XmlNode>();
-            List<string> excludedLists = SettingsHandler.getExcludedLists();
-            foreach (string excludeList in excludedLists)
-            {
-                string excludeXpath = "//dict[key='Name' and (string='Library')]";
-                XmlNode listToExclude = iTunesXmlDoc.SelectSingleNode(excludeXpath);
-                listsToExclude.Append(listToExclude);
-            }
-
-            // Construct list of XmlNodes by adding playlists not included in the 'PlaylistsToExclude' lists
-            List<XmlNode> PlaylistNodes = new List<XmlNode>();
-            foreach (XmlNode node in TempPlaylistNodes)
-            {
-                if (!ContainsNode(CollectionsToExclude, node) && (!listsToExclude.Contains(node)))
-                {
-                    PlaylistNodes.Add(node.Clone());
-                }
-            }
-            return PlaylistNodes;
-        }
-
         /// <summary>
         /// Get the list of playlists as XmlNodes and returns it as a list of strings
         /// </summary>
@@ -154,6 +114,48 @@ namespace MusicSync
 
         // --- PRIVATE METHODS --- //
 
+        /// <summary>
+        /// Load playlists and exclude unwanted playlists (library & collections)
+        /// </summary>
+        /// <param name="iTunesXmlDoc"></param>
+        /// <returns></returns>
+        private static List<XmlNode> LoadPlaylists(XmlDocument iTunesXmlDoc)
+        {
+            // Initialize List of nodes for playlists in XML file
+            string CollectionID = SettingsHandler.InitSettingsLoad()["collectionsFolderID"];
+            XmlNodeList TempPlaylistNodes = iTunesXmlDoc.SelectNodes("//dict[key/text()='Playlist ID']");
+
+            // Lists to exclude (as specified in settings file)
+            //List<XmlNode> listsToExclude = new List<XmlNode>();
+            List<string> excludedLists = SettingsHandler.getExcludedLists();
+            //foreach (string excludeList in excludedLists)
+            //{
+            //    string excludeXpath = $"//dict[key='Name' and (string='{excludeList}')]";
+            //    XmlNode listToExclude = iTunesXmlDoc.SelectSingleNode(excludeXpath);
+            //    listsToExclude.Add(listToExclude);
+            //}
+
+            // Construct list of XmlNodes by adding playlists not included in the 'PlaylistsToExclude' lists
+            List<XmlNode> PlaylistNodes = new List<XmlNode>();
+
+            foreach (XmlNode node in TempPlaylistNodes)
+            {
+                XmlNode nameNode = node.SelectSingleNode("key[text()='Name']");
+                string Name = nameNode.NextSibling.InnerText;
+                if (!excludedLists.Contains(Name))
+                {
+                    PlaylistNodes.Add(node.Clone());
+                }
+            }
+            return PlaylistNodes;
+        }
+
+        /// <summary>
+        /// Returns true if a NodeList containes a given Node
+        /// </summary>
+        /// <param name="nodeList"></param>
+        /// <param name="nodeToCheck"></param>
+        /// <returns></returns>
         private static bool ContainsNode(XmlNodeList nodeList, XmlNode nodeToCheck)
         {
             foreach (XmlNode node in nodeList)

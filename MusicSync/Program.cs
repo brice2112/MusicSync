@@ -40,7 +40,7 @@ namespace MusicSync
             fileCopier.CopyTracksByIds(settingsTable["iTunesXmlPath"], newlyAddedTrackIds, Path.Combine(settingsTable["exportDirectory"], "Songs"));
 
             // Extract playlist names
-            xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
+            //xmlPlaylistParser.ExtractPlaylistNames(iTunesXmlDoc);
 
             // Extract playlists and folders from XML file
             (List<msFolder>, List<msPlaylist>) FoldersAndPlaylist = xmlPlaylistParser.ExtractFoldersAndPlaylists(iTunesXmlDoc, settingsTable["iTunesXmlPath"]);

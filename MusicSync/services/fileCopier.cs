@@ -44,7 +44,7 @@ namespace MusicSync.services
                     try
                     {
                         File.Copy(trackFilePath, destTrackFilePath, true);
-                        //Console.WriteLine($"Copied track with ID: {track} to {destTrackFilePath}");
+                        Console.WriteLine($"copied track with id: {track}");
                     }
                     catch (Exception ex)
                     {
