@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.Serialization.Formatters;
 using System.Xml;
 
 namespace MusicSync
@@ -27,7 +28,14 @@ namespace MusicSync
 
         public static List<String> getExcludedLists()
         {
-            
+            XmlDocument settingsDoc = LoadXml(appXmlPath);
+            var lists = new List<String>();
+            XmlNodeList listNodes = settingsDoc.SelectNodes("settings/excludedlists");
+            foreach (XmlNode node in listNodes)
+            {
+                lists.Append(node.InnerText);
+            }
+            return lists;
         }
 
         private static Dictionary<String, String> LoadSettingsValues(XmlDocument settingsDoc)

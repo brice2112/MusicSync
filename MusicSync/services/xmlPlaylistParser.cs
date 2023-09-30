@@ -27,15 +27,22 @@ namespace MusicSync
             XmlNodeList CollectionsToExclude = iTunesXmlDoc.SelectNodes("//dict[key[text()='Parent Persistent ID']/following-sibling::string[text()='" + CollectionID + "']]");
 
             // -> Other big and pointless playlists
-            string excludeXpath = "//dict[key='Name' and (string='Library' or string='Downloaded' or string='Music' or string='Movies' or string='TV Shows' or string='Podcasts' or string='Audiobooks' or string='Collections' or string='Purchased')]";
+            //string excludeXpath = "//dict[key='Name' and (string='Library' or string='Downloaded' or string='Music' or string='Movies' or string='TV Shows' or string='Podcasts' or string='Audiobooks' or string='Collections' or string='Purchased')]";
 
-            XmlNodeList OtherPlaylistsToExclude = iTunesXmlDoc.SelectNodes(excludeXpath);
+            List<XmlNode> listsToExclude = new List<XmlNode>();
+            List<string> excludedLists = SettingsHandler.getExcludedLists();
+            foreach (string excludeList in excludedLists)
+            {
+                string excludeXpath = "//dict[key='Name' and (string='Library')]";
+                XmlNode listToExclude = iTunesXmlDoc.SelectSingleNode(excludeXpath);
+                listsToExclude.Append(listToExclude);
+            }
 
             // Construct list of XmlNodes by adding playlists not included in the 'PlaylistsToExclude' lists
             List<XmlNode> PlaylistNodes = new List<XmlNode>();
             foreach (XmlNode node in TempPlaylistNodes)
             {
-                if (!ContainsNode(CollectionsToExclude, node) && (!ContainsNode(OtherPlaylistsToExclude, node)))
+                if (!ContainsNode(CollectionsToExclude, node) && (!listsToExclude.Contains(node)))
                 {
                     PlaylistNodes.Add(node.Clone());
                 }
