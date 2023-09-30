@@ -25,6 +25,11 @@ namespace MusicSync
             return iTunesXmlDoc;
         }
 
+        public static List<String> getExcludedLists()
+        {
+            
+        }
+
         private static Dictionary<String, String> LoadSettingsValues(XmlDocument settingsDoc)
         {
             Dictionary<String, String> result = new Dictionary<String, String>();
