@@ -37,18 +37,24 @@ namespace MusicSync.services
                 {
                     string destTrackFolder = Path.Combine(destinationFolder, track.AlbumArtist, track.Album);
                     string destTrackFilePath = Path.Combine(destTrackFolder, Path.GetFileName(trackFilePath));
+
+                    //Decode URI paths to handle special characters
+                    string sourceDecodedPath = Uri.UnescapeDataString(trackFilePath);
+                    string destinationDecodedPath = Uri.UnescapeDataString(destTrackFilePath);
+
+
                     if (!Path.Exists(destTrackFolder))
                     {
                         Directory.CreateDirectory(destTrackFolder);
                     }
                     try
                     {
-                        File.Copy(trackFilePath, destTrackFilePath, true);
-                        Console.WriteLine($"copied track with id: {track}");
+                        File.Copy(sourceDecodedPath, destinationDecodedPath, true);
+                        Console.WriteLine($"copying track: {track.Artist} - {track.Title}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error copying track with ID: {track}. {ex.Message}");
+                        Console.WriteLine($"Error copying track with ID: {track.TrackID}. {ex.Message}");
                     }
                 }
                 else
